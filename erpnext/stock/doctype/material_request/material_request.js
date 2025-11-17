@@ -68,6 +68,8 @@ frappe.ui.form.on("Material Request", {
 				filters: { company: doc.company },
 			};
 		});
+		frm.set_value('requested_by', frappe.user.full_name());
+		frm.set_value('branch', "BTFEC Management");
 
 		erpnext.accounts.dimensions.setup_dimension_filters(frm, frm.doctype);
 	},

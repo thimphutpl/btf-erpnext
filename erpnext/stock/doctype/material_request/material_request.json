@@ -18,6 +18,7 @@
   "transaction_date",
   "schedule_date",
   "amended_from",
+  "requested_by",
   "warehouse_section",
   "scan_barcode",
   "column_break_13",
@@ -26,6 +27,8 @@
   "set_warehouse",
   "items_section",
   "items",
+  "section_break_qznn",
+  "purpose",
   "terms_tab",
   "terms_section_break",
   "tc_name",
@@ -364,13 +367,29 @@
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
+  },
+  {
+   "fieldname": "requested_by",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Requested By",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_qznn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Small Text",
+   "label": "Purpose"
   }
  ],
  "icon": "fa fa-ticket",
  "idx": 70,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-20 10:53:29.608710",
+ "modified": "2025-09-05 14:40:56.686788",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Material Request",

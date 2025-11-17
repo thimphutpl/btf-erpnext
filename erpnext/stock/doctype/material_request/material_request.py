@@ -44,6 +44,8 @@ class MaterialRequest(BuyingController):
 		naming_series: DF.Literal["MAT-MR-.YYYY.-"]
 		per_ordered: DF.Percent
 		per_received: DF.Percent
+		purpose: DF.SmallText | None
+		requested_by: DF.Data | None
 		scan_barcode: DF.Data | None
 		schedule_date: DF.Date | None
 		select_print_heading: DF.Link | None
