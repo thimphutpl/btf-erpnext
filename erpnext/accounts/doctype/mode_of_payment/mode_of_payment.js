@@ -8,13 +8,13 @@ frappe.ui.form.on("Mode of Payment", {
 			return {
 				filters: [
 					["Account", "account_type", "in", "Bank, Cash, Receivable"],
-					["Account", "is_group", "=", 0],
+		a			["Account", "is_group", "=", 0],
 					["Account", "company", "=", d.company],
 				],
 			};
 		});
 
-		frm.set_query("account", "branch_accounts", function (doc, cdt, cdn) {
+		frm.set_query("account", function (doc, cdt, cdn) {
 			let d = locals[cdt][cdn];
 			return {
 				filters: [
