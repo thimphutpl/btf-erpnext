@@ -94,6 +94,7 @@
   "attendance_device_id",
   "column_break_44",
   "holiday_list",
+  "shift_type",
   "salary_information",
   "ctc",
   "salary_currency",
@@ -990,6 +991,7 @@
   {
    "fieldname": "yelp_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "YELP Employee"
   },
   {
@@ -1093,6 +1095,7 @@
    "fieldname": "approver",
    "fieldtype": "Link",
    "hidden": 1,
+   "ignore_user_permissions": 1,
    "label": "Approver",
    "options": "Employee"
   },
@@ -1102,6 +1105,12 @@
    "fieldtype": "Data",
    "label": "Approver Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "shift_type",
+   "fieldtype": "Link",
+   "label": "Shift Type ",
+   "options": "Shift Type"
   }
  ],
  "icon": "fa fa-user",
@@ -1109,7 +1118,7 @@
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2025-09-13 21:03:19.441687",
+ "modified": "2025-11-19 23:37:13.825595",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Employee",
@@ -1147,6 +1156,18 @@
    "read": 1,
    "report": 1,
    "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Approver",
    "share": 1,
    "write": 1
   }
