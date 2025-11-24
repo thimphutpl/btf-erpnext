@@ -22,10 +22,10 @@ frappe.ui.form.on("Journal Entry", {
 		];
 
 		// filter naming base on entry type
-		frm.set_query("naming_series", function() {
-			var entry_type = in_list(["Journal Entry", "Opening Entry", "Depreciation Entry"], frm.doc.voucher_type) ?
+		frm.set_query("naming_series", function () {
+			var entry_type = in_list(["Journal Entry", "Depreciation Entry"], frm.doc.voucher_type) ?
 				"Journal Entry" : frm.doc.voucher_type;
-			
+
 			return {
 				filters: {
 					"entry_type": entry_type,
@@ -34,7 +34,7 @@ frappe.ui.form.on("Journal Entry", {
 		});
 	},
 
-	onload:function(frm){
+	onload: function (frm) {
 		create_custom_buttons(frm);
 	},
 
@@ -198,8 +198,8 @@ frappe.ui.form.on("Journal Entry", {
 							frm.doc.voucher_type == "Bank Entry"
 								? "Bank"
 								: frm.doc.voucher_type == "Cash Entry"
-								? "Cash"
-								: null,
+									? "Cash"
+									: null,
 						company: frm.doc.company,
 					},
 					callback: function (r) {
@@ -454,18 +454,40 @@ frappe.ui.form.on("Journal Entry Account", {
 	// 	}
 	// },
 
-	account: function (frm, dt, dn) {
-		erpnext.journal_entry.set_account_details(frm, dt, dn);
-	},
+	account: function(frm, cdt, cdn) {
+        erpnext.journal_entry.set_account_details(frm, cdt, cdn);
+		// var row = locals[cdt][cdn];
+        // if (frm.doc.multi_currency && row.exchange_rate) {
+        //     frappe.model.set_value(cdt, cdn, "credit_in_account_currency",
+        //         flt(row.debit_in_account_currency) / flt(row.exchange_rate)
+        //     );
+        // }
+		
+		let row = locals[cdt][cdn];
+        if (frm.doc.multi_currency && row.account && row.exchange_rate) {
+            let first_row = frm.doc.accounts[0];
 
-	debit_in_account_currency: function (frm, cdt, cdn) {
+            if (first_row && first_row.debit_in_account_currency) {
+                let credit_amount = flt(first_row.debit_in_account_currency) / flt(row.exchange_rate);
+
+                frappe.model.set_value(cdt, cdn, "credit_in_account_currency", credit_amount);
+            }
+        }
+    },
+
+
+		debit_in_account_currency: function(frm, cdt, cdn) {
+		var row = locals[cdt][cdn];
+		frappe.model.set_value(cdt, cdn, "taxable_amount_in_account_currency",
+				flt(row.debit_in_account_currency) || flt(row.credit_in_account_currency));
 		erpnext.journal_entry.set_exchange_rate(frm, cdt, cdn);
 	},
-
-	credit_in_account_currency: function (frm, cdt, cdn) {
+credit_in_account_currency: function(frm, cdt, cdn) {
+		var row = locals[cdt][cdn];
+		frappe.model.set_value(cdt, cdn, "taxable_amount_in_account_currency",
+				flt(row.debit_in_account_currency) || flt(row.credit_in_account_currency));
 		erpnext.journal_entry.set_exchange_rate(frm, cdt, cdn);
 	},
-
 	debit: function (frm, dt, dn) {
 		cur_frm.cscript.update_totals(frm.doc);
 	},
@@ -681,6 +703,7 @@ $.extend(erpnext.journal_entry, {
 
 $.extend(erpnext.journal_entry, {
 	set_account_details: function (frm, dt, dn) {
+		
 		var d = locals[dt][dn];
 		if (d.account) {
 			if (!frm.doc.company) frappe.throw(__("Please select Company first"));
@@ -732,9 +755,9 @@ $.extend(erpnext.journal_entry, {
 });
 
 /* ePayment Begins */
-var create_custom_buttons = function(frm){
-	if(frm.doc.docstatus == 1 && (frm.doc.voucher_type == "Bank Entry" || frm.doc.voucher_type == "Contra Entry") && frm.doc.mode_of_payment == "ePayment"){
-		if(!frm.doc.payment_status || frm.doc.payment_status == 'Failed' || frm.doc.payment_status == 'Payment Failed'){
+var create_custom_buttons = function (frm) {
+	if (frm.doc.docstatus == 1 && (frm.doc.voucher_type == "Bank Entry" || frm.doc.voucher_type == "Contra Entry") && frm.doc.mode_of_payment == "ePayment") {
+		if (!frm.doc.payment_status || frm.doc.payment_status == 'Failed' || frm.doc.payment_status == 'Payment Failed') {
 			frm.page.set_primary_action(__('Process Payment'), () => {
 				frappe.model.open_mapped_doc({
 					method: "erpnext.accounts.doctype.journal_entry.journal_entry.make_bank_payment",

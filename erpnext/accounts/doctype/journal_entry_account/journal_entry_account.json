@@ -280,32 +280,24 @@
    "label": "Taxes"
   },
   {
-   "default": "0",
-   "fieldname": "apply_tds",
-   "fieldtype": "Check",
-   "label": "Apply TDS"
-  },
-  {
+   "depends_on": "eval:doc.apply_tds",
    "fieldname": "add_deduct_tax",
    "fieldtype": "Select",
    "label": "Add Or Deduct",
-   "options": "\nAdd\nDeduct",
-   "read_only": 1
+   "options": "\nAdd\nDeduct"
   },
   {
    "depends_on": "eval:doc.apply_tds",
    "fieldname": "tax_account",
    "fieldtype": "Link",
    "label": "Tax Account",
-   "options": "Account",
-   "read_only": 1
+   "options": "Account"
   },
   {
    "depends_on": "eval:doc.apply_tds",
    "fieldname": "rate",
    "fieldtype": "Float",
-   "label": "Rate",
-   "read_only": 1
+   "label": "Rate"
   },
   {
    "fieldname": "column_break_eyxg",
@@ -338,12 +330,18 @@
    "fieldtype": "Currency",
    "label": "Tax Amount in Company Currency",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "apply_tds",
+   "fieldtype": "Check",
+   "label": "Apply TDS"
   }
  ],
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-08-28 12:05:47.687893",
+ "modified": "2025-09-25 21:50:13.837082",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry Account",

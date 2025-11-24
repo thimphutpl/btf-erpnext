@@ -37,6 +37,8 @@
   "difference",
   "get_balance",
   "multi_currency",
+  "is_investment",
+  "no_of_shares",
   "total_amount_currency",
   "total_amount",
   "total_amount_in_words",
@@ -191,7 +193,7 @@
   {
    "fieldname": "user_remark",
    "fieldtype": "Small Text",
-   "label": "User Remark",
+   "label": "Narration",
    "no_copy": 1,
    "oldfieldname": "user_remark",
    "oldfieldtype": "Small Text",
@@ -599,6 +601,23 @@
    "label": "Payment Status",
    "no_copy": 1,
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_investment",
+   "fieldtype": "Check",
+   "label": "Is Investment",
+   "print_hide": 1
+  },
+  {
+   "depends_on": "eval:doc.is_investment",
+   "fieldname": "no_of_shares",
+   "fieldtype": "Data",
+   "label": "No of Shares",
+   "no_copy": 1,
+   "oldfieldname": "user_remark",
+   "oldfieldtype": "Small Text",
+   "print_hide": 1
   }
  ],
  "icon": "fa fa-file-text",
@@ -613,7 +632,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2025-07-10 13:11:55.903756",
+ "modified": "2025-10-09 16:16:59.830647",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry",
