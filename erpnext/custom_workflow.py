@@ -1093,20 +1093,20 @@ class CustomWorkflow:
 				frappe.throw("Only {} can apply this Request".format(self.doc.owner))
 		elif self.new_state.lower() == ("Waiting for Verification".lower()):
 			if "HR User" not in frappe.get_roles(frappe.session.user):
-				if self.doc.supervisor != frappe.session.user:
-					frappe.throw("Only {} can Approve this request".format(self.doc.supervisor_name))
+				if self.doc.approver != frappe.session.user:
+					frappe.throw("Only {} can Approve this request".format(self.doc.approver_name))
 		elif self.new_state.lower() == ("Waiting for Finance Verification".lower()):
 			if "Accounts User" not in frappe.get_roles(frappe.session.user):
-				if self.doc.supervisor != frappe.session.user:
-					frappe.throw("Only {} can Approve this request".format(self.doc.supervisor_name))
+				if self.doc.approver != frappe.session.user:
+					frappe.throw("Only {} can Approve this request".format(self.doc.approver_name))
 		elif self.new_state.lower() == ("Waiting Recommendation".lower()):
 			if "Accounts Manager" not in frappe.get_roles(frappe.session.user):
-				if self.doc.supervisor != frappe.session.user:
-					frappe.throw("Only {} can Approve this request".format(self.doc.supervisor_name))
+				if self.doc.approver != frappe.session.user:
+					frappe.throw("Only {} can Approve this request".format(self.doc.approver_name))
 		elif self.new_state.lower() == ("Waiting Approval".lower()):
 			if "Approver" not in frappe.get_roles(frappe.session.user):
-				if self.doc.supervisor != frappe.session.user:
-					frappe.throw("Only {} can Approve this request".format(self.doc.supervisor_name))
+				if self.doc.approver != frappe.session.user:
+					frappe.throw("Only {} can Approve this request".format(self.doc.approver_name))
 		else:
 			return
 			#frappe.throw(_("Invalid Workflow State {}").format(self.doc.workflow_state))
