@@ -32,7 +32,7 @@ class CustomWorkflow:
 			self.employee = frappe.db.get_value(
 				"Employee", self.doc.employee, self.field_list
 			)
-			self.reports_to = frappe.db.get_value(
+			self.reports_to= frappe.db.get_value(
 				"Employee",
 				{
 					"name": frappe.db.get_value(
@@ -42,15 +42,30 @@ class CustomWorkflow:
 				self.field_list,
 			)
 			if not self.reports_to:
-				frappe.throw(
-					"Reports To not set for Employee {}".format(
-						self.doc.employee
-						if self.doc.employee
-						else frappe.db.get_value(
-							"Employee", {"user_id", self.doc.owner}, "name"
+				self.department = frappe.db.get_value(
+						"Employee", 
+						self.doc.employee, 
+						"department"
+					)
+				if self.department:
+					exist_appr=frappe.db.exists("Department","approver" ,self.employee)
+					hr_approver=frappe.db.get_single_value('HR Settings','hr_manager')
+					email=frappe.db.get_value("Employee", hr_approver, "user_id")
+					if not email:
+						frappe.throw("HR Manager is not in HR Settings")
+					
+					self.reports_to=email
+					#return
+				else:
+					frappe.throw(
+						"Reports To not set for Employee {}".format(
+							self.doc.employee
+							if self.doc.employee
+							else frappe.db.get_value(
+								"Employee", {"user_id", self.doc.owner}, "name"
+							)
 						)
 					)
-				)
 
 			self.hr_manager = frappe.db.get_value(
 				"Employee",
