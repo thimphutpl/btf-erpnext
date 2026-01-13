@@ -1104,7 +1104,8 @@ class CustomWorkflow:
 		):
 			return
 	   	
-		#elif self.new_state.lower() in ("Draft".lower()):
+		elif self.new_state.lower() in ("Draft".lower()):
+			return
 			
 		elif self.new_state.lower() == ("Waiting For Verification".lower()):
 			return
