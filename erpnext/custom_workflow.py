@@ -1307,7 +1307,7 @@ class NotifyCustomWorkflow:
 
 		parent_doc = frappe.get_doc(self.doc.doctype, self.doc.name)
 		args = parent_doc.as_dict()
-
+		args["workflow_state"] = self.new_state
 		if self.doc.doctype == "Leave Application":
 			template = frappe.db.get_single_value(
 				"HR Settings", "leave_application_status_notification_template"
@@ -1341,14 +1341,15 @@ class NotifyCustomWorkflow:
 					)
 				)
 				return
-		elif self.doc.doctype == "Travel Request":
+		elif self.doc.doctype == "Travel Adjustment":
 			template = frappe.db.get_single_value(
-				"HR Settings", "authorization_status_notification_template"
+				"HR Settings", "travel_adjustment_status_notification_template"
 			)
+			#frappe.throw(str(self.doc.workflow_state))
 			if not template:
 				frappe.msgprint(
 					_(
-						"Please set default template for Authorization Status Notification in HR Settings."
+						"Please set default template for Travel Adjustment Status Notification in HR Settings."
 					)
 				)
 				return
@@ -1551,14 +1552,14 @@ class NotifyCustomWorkflow:
 						)
 					)
 					return
-			elif self.doc.doctype == "Travel Request":
+			elif self.doc.doctype == "Travel Adjustment":
 				template = frappe.db.get_single_value(
-					"HR Settings", "authorization_approval_notification_template"
+					"HR Settings", "travel_adjustment_approval_notification_template"
 				)
 				if not template:
 					frappe.msgprint(
 						_(
-							"Please set default template for Authorization Approval Notification in HR Settings."
+							"Please set default template for Travel Ajustment Approval Notification in HR Settings."
 						)
 					)
 					return
@@ -1779,6 +1780,20 @@ class NotifyCustomWorkflow:
 				frappe.msgprint(
 					_(
 						"Please set default template for Travel Authorization Approval Notification HR Settings."
+					)
+				)
+				return
+		
+
+		elif self.doc.doctype == "Travel Adjustment":
+			template = frappe.db.get_single_value(
+				"HR Settings",
+				"travel_adjustment_approval_notification_template",
+			)
+			if not template:
+				frappe.msgprint(
+					_(
+						"Please set default template for Travel Adjustment Approval Notification HR Settings."
 					)
 				)
 				return
@@ -2112,8 +2127,11 @@ class NotifyCustomWorkflow:
 			self.notify_verifier()
 		elif self.new_state.lower() == "waiting approval":
 			self.notify_approver()
+
+		elif self.new_state.lower() == "approved":
+			self.notify_employee()
 		elif self.new_state in (
-			"Approved",
+			
 			"Rejected",
 			"Cancelled",
 			"Claimed",
@@ -2125,6 +2143,7 @@ class NotifyCustomWorkflow:
 			):
 				self.notify_employee()
 			else:
+				
 				self.notify_employee()
 		elif (
 			self.new_state.startswith("Waiting")
