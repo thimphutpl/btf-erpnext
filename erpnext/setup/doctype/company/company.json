@@ -60,6 +60,7 @@
   "payment_terms",
   "cost_center",
   "default_finance_book",
+  "default_branch",
   "fleet_accounts_section",
   "insurance_expense_account",
   "pol_expense_account",
@@ -1029,6 +1030,12 @@
    "fieldtype": "Link",
    "label": "Default Interest Free Loan Account",
    "options": "Account"
+  },
+  {
+   "fieldname": "default_branch",
+   "fieldtype": "Link",
+   "label": "Default Branch",
+   "options": "Branch"
   }
  ],
  "icon": "fa fa-building",
@@ -1036,7 +1043,7 @@
  "image_field": "company_logo",
  "is_tree": 1,
  "links": [],
- "modified": "2025-08-18 19:41:21.521596",
+ "modified": "2026-06-23 11:14:47.991807",
  "modified_by": "Administrator",
  "module": "Setup",
  "name": "Company",

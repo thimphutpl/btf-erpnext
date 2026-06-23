@@ -50,6 +50,7 @@ class Company(NestedSet):
 		default_advance_paid_account: DF.Link | None
 		default_advance_received_account: DF.Link | None
 		default_bank_account: DF.Link | None
+		default_branch: DF.Link | None
 		default_buying_terms: DF.Link | None
 		default_cash_account: DF.Link | None
 		default_currency: DF.Link
