@@ -981,6 +981,9 @@ class CustomWorkflow:
 			#self.set_verifier("Verifier")
 
 		elif state == "waiting approval":
+			# frappe.throw("hi")
+			if self.doc.reports_to==self.doc.leave_approver:
+				return
 			if user != self.doc.reports_to:
 				frappe.throw(
 					f"Only {self.doc.reports_to} have permission to move leave to Waiting Approval"
@@ -1083,6 +1086,8 @@ class CustomWorkflow:
 					f"Only {self.doc.owner} can move travel authorization to Waiting for Verification"
 				)
 		elif state == "waiting approval":
+			if self.doc.reports_to==self.doc.approver:
+				return
 			if user != self.doc.reports_to:
 				frappe.throw(
 					f"Only {self.doc.reports_to} have permission to move to Waiting Approval"
@@ -1202,6 +1207,8 @@ class CustomWorkflow:
 				frappe.throw("Only {} can apply this Request".format(self.doc.owner))
 
 		elif self.new_state.lower() == ("Waiting Approval".lower()):
+			if self.doc.reports_to==self.doc.approver:
+				return
 			if frappe.session.user != self.doc.reports_to:
 				frappe.throw("Only {} can apply this Request".format(self.doc.reports_to))
 		
@@ -1309,6 +1316,7 @@ class NotifyCustomWorkflow:
 		args = parent_doc.as_dict()
 		args["workflow_state"] = self.new_state
 		if self.doc.doctype == "Leave Application":
+			frappe.throw("hii")
 			template = frappe.db.get_single_value(
 				"HR Settings", "leave_application_status_notification_template"
 			)
@@ -2129,6 +2137,7 @@ class NotifyCustomWorkflow:
 			self.notify_approver()
 
 		elif self.new_state.lower() == "approved":
+			
 			self.notify_employee()
 		elif self.new_state in (
 			
@@ -2151,9 +2160,11 @@ class NotifyCustomWorkflow:
 			and self.doc.doctype
 			not in ("Asset Issue Details", "Project Capitalization")
 		):
+			
 			self.notify_approver()
 
 		else:
+			#frappe.throw("hi")
 			frappe.msgprint(
 				_("Email notifications not configured for workflow state {}").format(
 					self.new_state
