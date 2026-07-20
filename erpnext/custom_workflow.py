@@ -1316,7 +1316,7 @@ class NotifyCustomWorkflow:
 		args = parent_doc.as_dict()
 		args["workflow_state"] = self.new_state
 		if self.doc.doctype == "Leave Application":
-			frappe.throw("hii")
+			# frappe.throw("hii")
 			template = frappe.db.get_single_value(
 				"HR Settings", "leave_application_status_notification_template"
 			)
@@ -2089,7 +2089,6 @@ class NotifyCustomWorkflow:
 		if self.doc.doctype == "Travel Claim":
 			wf_state = self.new_state 
 			if wf_state == "Waiting for Verification":
-				
 				self.notify_user_role(wf_state)
 			elif wf_state == "Waiting for Finance Verification":
 				self.notify_user_role(wf_state)
@@ -2107,14 +2106,12 @@ class NotifyCustomWorkflow:
 		
 			return
 		elif self.doc.doctype in ("Employee Advance","Leave Encashment"):
-			wf_state = self.new_state 
+			wf_state = self.new_state
 			if wf_state == "Waiting for Verification":
-				
-				self.notify_user_role(wf_state)
+				self.notify_approver()
 			elif self.new_state.lower() == "waiting approval":
 				self.notify_approver()
 			elif wf_state == "Approved":
-				#frappe.throw("hjj")
 				self.notify_employee()
 			else:
 				return
