@@ -39,6 +39,7 @@ class JournalEntryAccount(Document):
 		reference_due_date: DF.Date | None
 		reference_name: DF.DynamicLink | None
 		reference_type: DF.Literal["", "Sales Invoice", "Purchase Invoice", "Journal Entry", "Sales Order", "Purchase Order", "Expense Claim", "Asset", "Loan", "Payroll Entry", "Employee Advance", "Exchange Rate Revaluation", "Invoice Discounting", "Fees", "Full and Final Statement", "Payment Entry", "Travel Advance", "Travel Claim", "Muster Roll Payment Entry", "Leave Encashment", "Visitor Pass Registry", "Insurance and Registration", "POL Advance", "Fee Closing Entry", "Cash Deposit Entry", "Asset Value Adjustment", "Leave Travel Concession", "Travel Authorization", "Employee Benefits"]
+		source_of_fund: DF.Link | None
 		tax_account: DF.Link | None
 		tax_amount: DF.Currency
 		tax_amount_in_account_currency: DF.Currency
