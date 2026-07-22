@@ -23,19 +23,19 @@ class ExchangeRateRevaluation(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
+		from erpnext.accounts.doctype.exchange_rate_revaluation_account.exchange_rate_revaluation_account import ExchangeRateRevaluationAccount
 		from frappe.types import DF
-
-		from erpnext.accounts.doctype.exchange_rate_revaluation_account.exchange_rate_revaluation_account import (
-			ExchangeRateRevaluationAccount,
-		)
 
 		accounts: DF.Table[ExchangeRateRevaluationAccount]
 		amended_from: DF.Link | None
+		branch: DF.Link
 		company: DF.Link
+		from_date: DF.Date
 		gain_loss_booked: DF.Currency
 		gain_loss_unbooked: DF.Currency
 		posting_date: DF.Date
 		rounding_loss_allowance: DF.Float
+		to_date: DF.Date
 		total_gain_loss: DF.Currency
 	# end: auto-generated types
 
@@ -138,10 +138,13 @@ class ExchangeRateRevaluation(Document):
 
 	@frappe.whitelist()
 	def get_accounts_data(self):
+		# frappe.throw(frappe.as_json(self.to_date))
 		self.validate_mandatory()
 		account_details = self.get_account_balance_from_gle(
 			company=self.company,
 			posting_date=self.posting_date,
+			from_date= self.from_date,
+			to_date= self.to_date,
 			account=None,
 			party_type=None,
 			party=None,
@@ -158,7 +161,7 @@ class ExchangeRateRevaluation(Document):
 
 	@staticmethod
 	def get_account_balance_from_gle(
-		company, posting_date, account, party_type, party, rounding_loss_allowance
+		company, posting_date, from_date, to_date, account, party_type, party, rounding_loss_allowance
 	):
 		account_details = []
 
@@ -169,41 +172,42 @@ class ExchangeRateRevaluation(Document):
 			if account:
 				accounts = [account]
 			else:
+				# MODIFIED: Remove all restrictive filters, only filter by root_type and company
 				res = (
 					qb.from_(acc)
-					.select(acc.name)
+					.select(acc.name, acc.account_currency)
 					.where(
 						(acc.is_group == 0)
 						& (acc.report_type == "Balance Sheet")
-						& (acc.root_type.isin(["Asset", "Liability", "Equity"]))
+						& (acc.root_type.isin(["Asset", "Liability" ]))
 						& (acc.account_type != "Stock")
 						& (acc.company == company)
-						& (acc.account_currency != company_currency)
+						# & (acc.account_currency != company_currency)
 					)
 					.orderby(acc.name)
-					.run(as_list=True)
+					.run(as_dict=True)
 				)
-				accounts = [x[0] for x in res]
+				accounts = [x.name for x in res]
+				account_currency_map = {x.name: x.account_currency for x in res}
 
 			if accounts:
-				having_clause = (qb.Field("balance") != qb.Field("balance_in_account_currency")) & (
-					(qb.Field("balance_in_account_currency") != 0) | (qb.Field("balance") != 0)
-				)
-
 				gle = qb.DocType("GL Entry")
 
-				# conditions
+				# Build conditions for GL Entry
 				conditions = []
 				conditions.append(gle.account.isin(accounts))
-				conditions.append(gle.posting_date.lte(posting_date))
+				conditions.append(gle.posting_date.gte(from_date))
+				conditions.append(gle.posting_date.lte(to_date))
 				conditions.append(gle.is_cancelled == 0)
+				conditions.append(gle.company == company)
 
 				if party_type:
 					conditions.append(gle.party_type == party_type)
 				if party:
 					conditions.append(gle.party == party)
 
-				account_details = (
+				# Get balances from GL Entry
+				gle_balances = (
 					qb.from_(gle)
 					.select(
 						gle.account,
@@ -214,37 +218,88 @@ class ExchangeRateRevaluation(Document):
 							"balance_in_account_currency"
 						),
 						(Sum(gle.debit) - Sum(gle.credit)).as_("balance"),
-						(Sum(gle.debit) - Sum(gle.credit) == 0)
-						^ (Sum(gle.debit_in_account_currency) - Sum(gle.credit_in_account_currency) == 0).as_(
-							"zero_balance"
-						),
 					)
 					.where(Criterion.all(conditions))
 					.groupby(gle.account, NullIf(gle.party_type, ""), NullIf(gle.party, ""))
-					.having(having_clause)
-					.orderby(gle.account)
 					.run(as_dict=True)
 				)
 
-				# round off balance based on currency precision
-				# and consider debit-credit difference allowance
+				# Create a dictionary of balances by account
+				balance_dict = {}
+				for bal in gle_balances:
+					key = (bal.account, bal.party_type or "", bal.party or "")
+					balance_dict[key] = bal
+
+				# Process ALL accounts (including those with zero balance)
 				currency_precision = get_currency_precision()
 				rounding_loss_allowance = float(rounding_loss_allowance)
-				for acc in account_details:
-					acc.balance_in_account_currency = flt(acc.balance_in_account_currency, currency_precision)
-					if abs(acc.balance_in_account_currency) <= rounding_loss_allowance:
-						acc.balance_in_account_currency = 0
 
-					acc.balance = flt(acc.balance, currency_precision)
-					if abs(acc.balance) <= rounding_loss_allowance:
-						acc.balance = 0
+				for acc_name in accounts:
+					# Check if account has balances
+					key = (acc_name, "", "")
+					if key in balance_dict:
+						bal = balance_dict[key]
+						balance_in_acct_currency = flt(bal.balance_in_account_currency, currency_precision)
+						balance = flt(bal.balance, currency_precision)
+						account_currency = bal.account_currency
+						party_type_val = bal.party_type
+						party_val = bal.party
+					else:
+						# No transactions - zero balance
+						balance_in_acct_currency = 0
+						balance = 0
+						account_currency = account_currency_map.get(acc_name, company_currency)
+						party_type_val = None
+						party_val = None
 
-					acc.zero_balance = (
-						True if (acc.balance == 0 or acc.balance_in_account_currency == 0) else False
+					# Apply rounding
+					if abs(balance_in_acct_currency) <= rounding_loss_allowance:
+						balance_in_acct_currency = 0
+					if abs(balance) <= rounding_loss_allowance:
+						balance = 0
+
+					zero_balance = True if (balance == 0 or balance_in_acct_currency == 0) else False
+
+					account_details.append(
+						frappe._dict({
+							"account": acc_name,
+							"party_type": party_type_val,
+							"party": party_val,
+							"account_currency": account_currency,
+							"balance_in_account_currency": balance_in_acct_currency,
+							"balance": balance,
+							"zero_balance": zero_balance,
+						})
 					)
 
-		return account_details
+				# Also add party-wise balances (for Receivable/Payable with specific parties)
+				for bal in gle_balances:
+					if bal.party_type and bal.party:
+						key = (bal.account, bal.party_type, bal.party)
+						if key not in [(d.account, d.party_type, d.party) for d in account_details]:
+							balance_in_acct_currency = flt(bal.balance_in_account_currency, currency_precision)
+							balance = flt(bal.balance, currency_precision)
+							
+							if abs(balance_in_acct_currency) <= rounding_loss_allowance:
+								balance_in_acct_currency = 0
+							if abs(balance) <= rounding_loss_allowance:
+								balance = 0
+							
+							zero_balance = True if (balance == 0 or balance_in_acct_currency == 0) else False
+							
+							account_details.append(
+								frappe._dict({
+									"account": bal.account,
+									"party_type": bal.party_type,
+									"party": bal.party,
+									"account_currency": bal.account_currency,
+									"balance_in_account_currency": balance_in_acct_currency,
+									"balance": balance,
+									"zero_balance": zero_balance,
+								})
+							)
 
+		return account_details
 	@staticmethod
 	def calculate_new_account_balance(company, posting_date, account_details):
 		accounts = []
@@ -482,6 +537,8 @@ class ExchangeRateRevaluation(Document):
 		journal_entry = frappe.new_doc("Journal Entry")
 		journal_entry.voucher_type = "Exchange Rate Revaluation"
 		journal_entry.company = self.company
+		journal_entry.naming_series="Journal Voucher"
+		journal_entry.branch=self.branch
 		journal_entry.posting_date = self.posting_date
 		journal_entry.multi_currency = 1
 
@@ -588,28 +645,36 @@ def calculate_exchange_rate_using_last_gle(company, account, party_type, party):
 		if party:
 			conditions.append(gl.party == party)
 
-		voucher_type, voucher_no = (
+		# Get the latest voucher
+		result = (
 			qb.from_(gl)
 			.select(gl.voucher_type, gl.voucher_no)
 			.where(Criterion.all(conditions))
 			.orderby(gl.posting_date, order=Order.desc)
 			.limit(1)
-			.run()[0]
+			.run()
 		)
-
-		last_exchange_rate = (
-			qb.from_(gl)
-			.select((gl.debit - gl.credit) / (gl.debit_in_account_currency - gl.credit_in_account_currency))
-			.where(
-				(gl.voucher_type == voucher_type) & (gl.voucher_no == voucher_no) & (gl.account == account)
+		
+		# Check if we got a result
+		if result and len(result) > 0:
+			voucher_type, voucher_no = result[0]
+			
+			# Calculate exchange rate from that voucher
+			rate_result = (
+				qb.from_(gl)
+				.select((gl.debit - gl.credit) / (gl.debit_in_account_currency - gl.credit_in_account_currency))
+				.where(
+					(gl.voucher_type == voucher_type) & (gl.voucher_no == voucher_no) & (gl.account == account)
+				)
+				.orderby(gl.posting_date, order=Order.desc)
+				.limit(1)
+				.run()
 			)
-			.orderby(gl.posting_date, order=Order.desc)
-			.limit(1)
-			.run()[0][0]
-		)
+			
+			if rate_result and len(rate_result) > 0 and rate_result[0][0]:
+				last_exchange_rate = rate_result[0][0]
 
-	return last_exchange_rate
-
+	return last_exchange_rate or 0.0
 
 @frappe.whitelist()
 def get_account_details(
