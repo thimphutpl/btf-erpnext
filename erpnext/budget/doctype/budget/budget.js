@@ -49,8 +49,9 @@ frappe.ui.form.on('Budget', {
 			frm.set_value('cost_center', null)
 		}
 	},
-	get_accounts: function(frm) {
-		if(frm.doc.cost_center || frm.doc.project){
+	get_budget_heads: function(frm) {
+		
+		if(frm.doc.cost_center ){
 			return frappe.call({
 				method: "get_accounts",
 				doc: frm.doc,

@@ -42,17 +42,22 @@ class Budget(Document):
 		applicable_on_booking_actual_expenses: DF.Check
 		applicable_on_material_request: DF.Check
 		applicable_on_purchase_order: DF.Check
-		budget_against: DF.Literal["", "Cost Center", "Project"]
+		approved_budget: DF.Currency
+		branch: DF.Link | None
+		budget_against: DF.Literal["Cost Center"]
+		budget_proposal: DF.Link | None
 		budget_type: DF.Data | None
+		business_activity: DF.Link | None
 		company: DF.Link
-		cost_center: DF.Link | None
+		cost_center: DF.Link
 		deviation: DF.Percent
 		fiscal_year: DF.Link
+		initial_budget: DF.Currency
 		initial_total: DF.Currency
 		monthly_distribution: DF.Link | None
-		project: DF.Link | None
-		project_name: DF.Data | None
+		posting_date: DF.Date
 		supp_total: DF.Currency
+		withdrawal_budget: DF.Currency
 	# end: auto-generated types
 	def autoname(self):
 		self.name = make_autoname(
@@ -171,56 +176,64 @@ class Budget(Document):
 			initial_budget = flt(d.january) + flt(d.february) + flt(d.march) + flt(d.april)+ flt(d.may) +flt(d.june) +flt(d.july) +flt(d.august) + flt(d.september) +flt(d.october) +flt(d.november) +flt(d.december)
 			d.db_set("initial_budget", initial_budget)
 			d.db_set("budget_amount", flt(initial_budget) + flt(d.supplementary_budget) + flt(d.budget_received) - flt(d.budget_sent))
-
 	@frappe.whitelist()
-	# 	#Populate Budget Accounts with Expense and Fixed Asset Accounts
-	# def get_accounts(self):
-	# 	query = "select name as account, account_code from tabAccount where account_type in (\'Expense Account\',\'Fixed Asset\') and is_group = 0 and company = \'" + str(self.company) + "\' and (freeze_account is null or freeze_account != 'Yes') order by account_code ASC"
-	# 	entries = frappe.db.sql(query, as_dict=True)
-	# 	self.set('accounts', [])
-
-	# 	for d in entries:
-	# 		d.initial_budget = 0
-	# 		row = self.append('accounts', {})
-	# 		row.update(d)
-
 	def get_accounts(self):
-		# frappe.throw(str(self.cost_center))
-		condition = " and a.budget_type = '{}'".format(self.budget_type) if self.budget_type else ""
-		entries = frappe.db.sql("""select parent_account, a.name as account, a.budget_type, account_number
-							from tabAccount a
-							where a.is_group = 0
-							and (a.freeze_account is null or a.freeze_account != 'Yes')
-							
-							and a.company='{company}'
-							and NOT EXISTS( select 1
-								from `tabBudget` b 
-								inner join `tabBudget Account` i
-								on b.name = i.parent
-								where  b.docstatus != 2
-								and i.account = a.name
-								and b.cost_center = '{cost_center}'
-								and b.fiscal_year = '{fiscal_year}'
-								and b.company='{company}'
-								and b.name != '{name}'
-							)
-							and EXISTS(select 1 
-												from `tabBudget Settings Account Types` s
-												where s.parent = 'Budget Settings'
-												and s.account_type = a.account_type)
-							{condition}
-						""".format(fiscal_year =self.fiscal_year, cost_center=self.cost_center, name=self.name, condition = condition,company=self.company), as_dict=True)
-		self.set('accounts', [])
-		p_account = ""
-		for d in entries:
-			d.initial_budget = 0
-			if d.parent_account == p_account:
-				d.parent_account = ""
-			else:
-				p_account = d.parent_account
-			row = self.append('accounts', {})
-			row.update(d)
+		# Fetch parent account from Budget Settings
+		parent_account = frappe.db.get_single_value("Budget Settings", "budget_account")
 
+		if not parent_account:
+			frappe.throw(_("Please set Budget Account Parent in Budget Settings"))
+
+		# Get lft and rgt of parent account
+		parent = frappe.db.get_value(
+			"Account",
+			parent_account,
+			["lft", "rgt"],
+			as_dict=True
+		)
+
+		if not parent:
+			frappe.throw(_("Parent Account not found: {0}").format(parent_account))
+
+		# Optional budget type filter
+		condition = ""
+		values = {
+			"company": self.company,
+			"lft": parent.lft,
+			"rgt": parent.rgt
+		}
+
+		if self.budget_type:
+			condition = " AND a.budget_type = %(budget_type)s"
+			values["budget_type"] = self.budget_type
+
+		# Fetch all ledger accounts under parent account
+		account_list = frappe.db.sql("""
+			SELECT
+				a.parent_account,
+				a.name AS account,
+				a.account_name,
+				a.account_number,
+				a.budget_type
+			FROM `tabAccount` a
+			WHERE a.company = %(company)s
+			  AND a.lft > %(lft)s
+			  AND a.rgt < %(rgt)s
+			  AND a.is_group = 0
+			  AND (a.freeze_account IS NULL OR a.freeze_account != 'Yes')
+			  {condition}
+			ORDER BY a.lft
+		""".format(condition=condition), values, as_dict=True)
+
+		# Remove old rows from Budget Accounts child table
+		self.set("accounts", [])
+
+		# Add fetched accounts into child table
+		for acc in account_list:
+			row = self.append("accounts", {})
+			row.account = acc.account
+			row.account_code = acc.account_number
+			row.budget_type = acc.budget_type	
 	
 def delete_committed_consumed_budget(reference=None, reference_no=None):
 	if reference and reference_no:
