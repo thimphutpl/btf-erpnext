@@ -8,6 +8,7 @@
  "field_order": [
   "budget_commit_on",
   "monthly_budget_check",
+  "budget_account",
   "column_break_2",
   "allow_budget_deviation",
   "deviation",
@@ -75,12 +76,18 @@
    "fieldtype": "Select",
    "label": "Budget Level",
    "options": "Cost Center\nProject"
+  },
+  {
+   "fieldname": "budget_account",
+   "fieldtype": "Link",
+   "label": "Budget Account Parent",
+   "options": "Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-02 11:14:54.151406",
+ "modified": "2026-07-08 12:27:30.536932",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Budget Settings",
@@ -93,6 +100,16 @@
    "print": 1,
    "read": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Administrator",
    "share": 1,
    "write": 1
   }
