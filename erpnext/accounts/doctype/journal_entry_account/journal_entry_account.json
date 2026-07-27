@@ -12,6 +12,7 @@
   "col_break1",
   "bank_account",
   "party_type",
+  "party_type_copy",
   "party",
   "accounting_dimensions_section",
   "cost_center",
@@ -95,7 +96,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Party Type",
-   "options": "DocType",
+   "options": "Party Type",
    "search_index": 1
   },
   {
@@ -104,7 +105,7 @@
    "fieldtype": "Dynamic Link",
    "in_list_view": 1,
    "label": "Party",
-   "options": "party_type"
+   "options": "party_type_copy"
   },
   {
    "fieldname": "currency_section",
@@ -343,13 +344,23 @@
    "fieldname": "source_of_fund",
    "fieldtype": "Link",
    "label": "Source of Fund",
-   "options": "Account"
+   "options": "Source of Fund"
+  },
+  {
+   "fetch_from": "party_type.party_type",
+   "fieldname": "party_type_copy",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Party Type Copy",
+   "options": "DocType",
+   "search_index": 1
   }
  ],
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-06-25 16:23:40.923462",
+ "modified": "2026-07-26 22:06:22.366981",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry Account",

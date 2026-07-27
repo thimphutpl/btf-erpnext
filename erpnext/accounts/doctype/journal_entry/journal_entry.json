@@ -23,6 +23,7 @@
   "branch",
   "apply_tds",
   "tax_withholding_category",
+  "source_of_fund",
   "2_add_edit_gl_entries",
   "accounts",
   "section_break_phla",
@@ -553,6 +554,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "company.default_branch",
    "fieldname": "branch",
    "fieldtype": "Link",
    "label": "Branch",
@@ -618,6 +620,12 @@
    "oldfieldname": "user_remark",
    "oldfieldtype": "Small Text",
    "print_hide": 1
+  },
+  {
+   "fieldname": "source_of_fund",
+   "fieldtype": "Link",
+   "label": "Source of Fund",
+   "options": "Source of Fund"
   }
  ],
  "icon": "fa fa-file-text",
@@ -632,7 +640,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2025-10-09 16:16:59.830647",
+ "modified": "2026-07-26 19:10:18.996840",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry",

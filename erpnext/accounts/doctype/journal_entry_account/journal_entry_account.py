@@ -33,6 +33,7 @@ class JournalEntryAccount(Document):
 		parenttype: DF.Data
 		party: DF.DynamicLink | None
 		party_type: DF.Link | None
+		party_type_copy: DF.Link | None
 		project: DF.Link | None
 		rate: DF.Float
 		reference_detail_no: DF.Data | None
