@@ -125,6 +125,7 @@ def get_fiscal_years(
 	return []
 
 
+
 def _get_fiscal_years(company=None):
 	fiscal_years = frappe.cache().hget("fiscal_years", company) or []
 
@@ -181,6 +182,9 @@ def validate_fiscal_year(date, fiscal_year, company, label="Date", doc=None):
 		else:
 			throw(_("{0} '{1}' not in Fiscal Year {2}").format(label, formatdate(date), fiscal_year))
 
+@frappe.whitelist()
+def get_account_type(account,company):
+	return frappe.db.get_value("Account",{"name":account,"company":company},"account_type")
 
 @frappe.whitelist()
 def get_balance_on(
