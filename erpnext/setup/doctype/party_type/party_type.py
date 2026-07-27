@@ -16,7 +16,7 @@ class PartyType(Document):
 		from frappe.types import DF
 
 		account_type: DF.Literal["Payable", "Receivable"]
-		party_type: DF.Link
+		party_type: DF.Data
 	# end: auto-generated types
 
 	pass
