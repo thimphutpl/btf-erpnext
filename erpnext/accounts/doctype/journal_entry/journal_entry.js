@@ -524,23 +524,23 @@ frappe.ui.form.on("Journal Entry Account", {
 
 	account: function(frm, cdt, cdn) {
         erpnext.journal_entry.set_account_details(frm, cdt, cdn);
-		// var row = locals[cdt][cdn];
-        // if (frm.doc.multi_currency && row.exchange_rate) {
-        //     frappe.model.set_value(cdt, cdn, "credit_in_account_currency",
-        //         flt(row.debit_in_account_currency) / flt(row.exchange_rate)
-        //     );
-        // }
+	 var row = locals[cdt][cdn];
+         if (frm.doc.multi_currency && row.exchange_rate) {
+             frappe.model.set_value(cdt, cdn, "credit_in_account_currency",
+                 flt(row.debit_in_account_currency) / flt(row.exchange_rate)
+             );
+         }
 		
 		// let row = locals[cdt][cdn];
-        // if (frm.doc.multi_currency && row.account && row.exchange_rate) {
-        //     let first_row = frm.doc.accounts[0];
+         if (frm.doc.multi_currency && row.account && row.exchange_rate) {
+             let first_row = frm.doc.accounts[0];
 
-        //     if (first_row && first_row.debit_in_account_currency) {
-        //         let credit_amount = flt(first_row.debit_in_account_currency) / flt(row.exchange_rate);
+             if (first_row && first_row.debit_in_account_currency) {
+                 let credit_amount = flt(first_row.debit_in_account_currency) / flt(row.exchange_rate);
 
-        //         frappe.model.set_value(cdt, cdn, "credit_in_account_currency", credit_amount);
-        //     }
-        // }
+                 frappe.model.set_value(cdt, cdn, "credit_in_account_currency", credit_amount);
+             }
+         }
     },
 
 
@@ -760,7 +760,7 @@ $.extend(erpnext.journal_entry, {
 		if (row.account_currency == company_currency || !frm.doc.multi_currency) {
 			row.exchange_rate = 1;
 			erpnext.journal_entry.set_debit_credit_in_company_currency(frm, cdt, cdn);
-		} else if (!row.exchange_rate || row.exchange_rate == 1 || row.account_type == "Bank") {
+		} else if (!row.exchange_rate || row.exchange_rate == 1) {
 			frappe.call({
 				method: "erpnext.accounts.doctype.journal_entry.journal_entry.get_exchange_rate",
 				args: {
