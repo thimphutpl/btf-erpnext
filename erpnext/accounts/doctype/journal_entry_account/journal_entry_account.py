@@ -24,10 +24,12 @@ class JournalEntryAccount(Document):
 		cost_center: DF.Link | None
 		credit: DF.Currency
 		credit_in_account_currency: DF.Currency
+		current_rate: DF.Data | None
 		debit: DF.Currency
 		debit_in_account_currency: DF.Currency
 		exchange_rate: DF.Float
 		is_advance: DF.Literal["No", "Yes"]
+		name1: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
