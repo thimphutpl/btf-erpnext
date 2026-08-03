@@ -53,6 +53,7 @@ class MaterialRequestItem(Document):
 		schedule_date: DF.Date
 		stock_qty: DF.Float
 		stock_uom: DF.Link
+		supplier: DF.Data | None
 		uom: DF.Link
 		warehouse: DF.Link | None
 		wip_composite_asset: DF.Link | None

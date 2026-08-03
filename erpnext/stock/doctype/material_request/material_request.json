@@ -74,7 +74,7 @@
    "fieldname": "title",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Title",
+   "label": "Item required",
    "no_copy": 1,
    "print_hide": 1
   },
@@ -144,6 +144,7 @@
   {
    "fieldname": "scan_barcode",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Scan Barcode",
    "options": "Barcode"
   },
@@ -389,7 +390,7 @@
  "idx": 70,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-05 14:40:56.686788",
+ "modified": "2026-07-01 09:35:18.239660",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Material Request",
