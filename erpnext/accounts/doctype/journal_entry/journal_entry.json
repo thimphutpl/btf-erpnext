@@ -186,6 +186,7 @@
    "fieldname": "cheque_date",
    "fieldtype": "Date",
    "label": "Reference Date",
+   "mandatory_depends_on": "eval:doc.mode_of_payment=='Cheque'",
    "no_copy": 1,
    "oldfieldname": "cheque_date",
    "oldfieldtype": "Date",
@@ -394,7 +395,7 @@
    "report_hide": 1
   },
   {
-   "collapsible": 1,
+   "depends_on": "eval:doc.mode_of_payment=='Cheque'",
    "fieldname": "printing_settings",
    "fieldtype": "Section Break",
    "label": "Printing Settings"
@@ -404,6 +405,7 @@
    "fieldname": "pay_to_recd_from",
    "fieldtype": "Data",
    "label": "Pay To / Recd From",
+   "mandatory_depends_on": "eval:doc.mode_of_payment=='Cheque'",
    "no_copy": 1,
    "report_hide": 1
   },
@@ -640,7 +642,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2026-07-26 19:10:18.996840",
+ "modified": "2026-08-12 12:02:51.373113",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry",
