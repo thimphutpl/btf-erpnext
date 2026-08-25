@@ -141,6 +141,7 @@ class PurchaseInvoice(BuyingController):
 		paid_amount: DF.Currency
 		party_account_currency: DF.Link | None
 		payment_schedule: DF.Table[PaymentSchedule]
+		payment_status: DF.Literal["", "Draft", "Return", "Debit Note Issued", "Submitted", "Paid", "Partly Paid", "Unpaid", "Overdue", "Cancelled", "Internal Transfer"]
 		payment_terms_template: DF.Link | None
 		per_received: DF.Percent
 		plc_conversion_rate: DF.Float
@@ -165,7 +166,6 @@ class PurchaseInvoice(BuyingController):
 		shipping_address: DF.Link | None
 		shipping_address_display: DF.TextEditor | None
 		shipping_rule: DF.Link | None
-		status: DF.Literal["", "Draft", "Return", "Debit Note Issued", "Submitted", "Paid", "Partly Paid", "Unpaid", "Overdue", "Cancelled", "Internal Transfer"]
 		subscription: DF.Link | None
 		supplied_items: DF.Table[PurchaseReceiptItemSupplied]
 		supplier: DF.Link
@@ -1599,7 +1599,7 @@ class PurchaseInvoice(BuyingController):
 
 		if frappe.db.get_single_value("Buying Settings", "project_update_frequency") == "Each Transaction":
 			self.update_project()
-		self.db_set("status", "Cancelled")
+		self.db_set("payment_status", "Cancelled")
 
 		unlink_inter_company_doc(self.doctype, self.name, self.inter_company_invoice_reference)
 		self.ignore_linked_doctypes = (
@@ -1838,7 +1838,7 @@ class PurchaseInvoice(BuyingController):
 	def set_status(self, update=False, status=None, update_modified=True):
 		if self.is_new():
 			if self.get("amended_from"):
-				self.status = "Draft"
+				self.payment_status = "Draft"
 			return
 
 		outstanding_amount = flt(self.outstanding_amount, self.precision("outstanding_amount"))
@@ -1849,29 +1849,29 @@ class PurchaseInvoice(BuyingController):
 				status = "Cancelled"
 			elif self.docstatus == 1:
 				if self.is_internal_transfer():
-					self.status = "Internal Transfer"
+					self.payment_status = "Internal Transfer"
 				elif is_overdue(self, total):
-					self.status = "Overdue"
+					self.payment_status = "Overdue"
 				elif 0 < outstanding_amount < total:
-					self.status = "Partly Paid"
+					self.payment_status = "Partly Paid"
 				elif outstanding_amount > 0 and getdate(self.due_date) >= getdate():
-					self.status = "Unpaid"
+					self.payment_status = "Unpaid"
 				# Check if outstanding amount is 0 due to debit note issued against invoice
 				elif self.is_return == 0 and frappe.db.get_value(
 					"Purchase Invoice", {"is_return": 1, "return_against": self.name, "docstatus": 1}
 				):
-					self.status = "Debit Note Issued"
+					self.payment_status = "Debit Note Issued"
 				elif self.is_return == 1:
-					self.status = "Return"
+					self.payment_status = "Return"
 				elif outstanding_amount <= 0:
-					self.status = "Paid"
+					self.payment_status = "Paid"
 				else:
-					self.status = "Submitted"
+					self.payment_status = "Submitted"
 			else:
-				self.status = "Draft"
+				self.payment_status = "Draft"
 
 		if update:
-			self.db_set("status", self.status, update_modified=update_modified)
+			self.db_set("payment_status", self.payment_status, update_modified=update_modified)
 
 
 # to get details of purchase invoice/receipt from which this doc was created for exchange rate difference handling

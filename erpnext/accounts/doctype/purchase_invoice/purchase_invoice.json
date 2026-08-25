@@ -162,7 +162,7 @@
   "terms",
   "more_info_tab",
   "status_section",
-  "status",
+  "payment_status",
   "column_break_177",
   "per_received",
   "accounting_details_section",
@@ -1272,16 +1272,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "Draft",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_standard_filter": 1,
-   "label": "Status",
-   "no_copy": 1,
-   "options": "\nDraft\nReturn\nDebit Note Issued\nSubmitted\nPaid\nPartly Paid\nUnpaid\nOverdue\nCancelled\nInternal Transfer",
-   "print_hide": 1
-  },
-  {
    "fieldname": "inter_company_invoice_reference",
    "fieldtype": "Link",
    "label": "Inter Company Invoice Reference",
@@ -1427,6 +1417,7 @@
    "fieldname": "per_received",
    "fieldtype": "Percent",
    "hidden": 1,
+   "in_list_view": 1,
    "label": "Per Received",
    "no_copy": 1,
    "print_hide": 1,
@@ -1644,13 +1635,24 @@
    "label": "Branch",
    "options": "Branch",
    "reqd": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "payment_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Payment Status",
+   "no_copy": 1,
+   "options": "\nDraft\nReturn\nDebit Note Issued\nSubmitted\nPaid\nPartly Paid\nUnpaid\nOverdue\nCancelled\nInternal Transfer",
+   "print_hide": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 204,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-10 11:30:02.025414",
+ "modified": "2026-08-25 11:37:50.188496",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Purchase Invoice",

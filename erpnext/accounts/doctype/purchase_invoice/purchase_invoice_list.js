@@ -18,8 +18,8 @@ frappe.listview_settings["Purchase Invoice"] = {
 		"is_internal_supplier",
 	],
 	get_indicator(doc) {
-		if (doc.status == "Debit Note Issued") {
-			return [__(doc.status), "gray", "status,=," + doc.status];
+		if (doc.payment_status == "Debit Note Issued") {
+			return [__(doc.payment_status), "gray", "payment_status,=," + doc.payment_status];
 		}
 
 		if (flt(doc.outstanding_amount) > 0 && doc.docstatus == 1 && cint(doc.on_hold)) {
@@ -39,8 +39,8 @@ frappe.listview_settings["Purchase Invoice"] = {
 			"Internal Transfer": "darkgrey",
 		};
 
-		if (status_colors[doc.status]) {
-			return [__(doc.status), status_colors[doc.status], "status,=," + doc.status];
+		if (status_colors[doc.payment_status]) {
+			return [__(doc.payment_status), status_colors[doc.payment_status], "payment_status,=," + doc.payment_status];
 		}
 	},
 

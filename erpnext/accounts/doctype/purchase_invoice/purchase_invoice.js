@@ -151,7 +151,7 @@ erpnext.accounts.PurchaseInvoice = class PurchaseInvoice extends erpnext.buying.
 						},
 						get_query_filters: {
 							docstatus: 1,
-							status: ["not in", ["Closed", "On Hold"]],
+							payment_status: ["not in", ["Closed", "On Hold"]],
 							per_billed: ["<", 99.99],
 							company: me.frm.doc.company,
 						},
@@ -173,7 +173,7 @@ erpnext.accounts.PurchaseInvoice = class PurchaseInvoice extends erpnext.buying.
 						},
 						get_query_filters: {
 							docstatus: 1,
-							status: ["not in", ["Closed", "Completed", "Return Issued"]],
+							payment_status: ["not in", ["Closed", "Completed", "Return Issued"]],
 							company: me.frm.doc.company,
 							is_return: 0,
 						},
@@ -581,7 +581,7 @@ cur_frm.cscript.cost_center = function (doc, cdt, cdn) {
 
 cur_frm.fields_dict["items"].grid.get_field("project").get_query = function (doc, cdt, cdn) {
 	return {
-		filters: [["Project", "status", "not in", "Completed, Cancelled"]],
+		filters: [["Project", "payment_status", "not in", "Completed, Cancelled"]],
 	};
 };
 
