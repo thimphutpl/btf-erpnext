@@ -286,6 +286,10 @@ sounds = [
 
 has_upload_permission = {"Employee": "erpnext.setup.doctype.employee.employee.has_upload_permission"}
 
+permission_query_conditions = {
+ 	"Material Request": "erpnext.stock.doctype.material_request.material_request.get_permission_query_conditions",
+}
+
 has_website_permission = {
 	"Sales Order": "erpnext.controllers.website_list_for_contact.has_website_permission",
 	"Quotation": "erpnext.controllers.website_list_for_contact.has_website_permission",
@@ -481,9 +485,8 @@ email_brand_image = "assets/erpnext/images/erpnext-logo.jpg"
 
 default_mail_footer = """
 	<span>
-		Sent via
-		<a class="text-muted" href="https://erpnext.com?source=via_email_footer" target="_blank">
-			ERPNext
+		<a class="text-muted" href="https://dev.bhutantrustfund.bt/app/hr" target="_blank">
+			Open Now
 		</a>
 	</span>
 """
