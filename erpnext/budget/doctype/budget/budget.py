@@ -47,7 +47,6 @@ class Budget(Document):
 		budget_against: DF.Literal["Cost Center"]
 		budget_proposal: DF.Link | None
 		budget_type: DF.Data | None
-		business_activity: DF.Link | None
 		company: DF.Link
 		cost_center: DF.Link
 		deviation: DF.Percent
@@ -56,6 +55,8 @@ class Budget(Document):
 		initial_total: DF.Currency
 		monthly_distribution: DF.Link | None
 		posting_date: DF.Date
+		project: DF.Link | None
+		project_name: DF.Data | None
 		supp_total: DF.Currency
 		withdrawal_budget: DF.Currency
 	# end: auto-generated types

@@ -60,6 +60,8 @@ class BudgetAccount(Document):
 		parent_account: DF.Link | None
 		parentfield: DF.Data
 		parenttype: DF.Data
+		project_code: DF.Link | None
+		project_name: DF.Data | None
 		sb_april: DF.Data | None
 		sb_august: DF.Data | None
 		sb_december: DF.Data | None
@@ -73,6 +75,8 @@ class BudgetAccount(Document):
 		sb_october: DF.Data | None
 		sb_september: DF.Data | None
 		september: DF.Currency
+		source_of_fund: DF.Link | None
+		source_of_fund_name: DF.Data | None
 		supplementary_budget: DF.Currency
 	# end: auto-generated types
 	pass
