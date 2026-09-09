@@ -14,6 +14,7 @@ class BudgetAccount(Document):
 		from frappe.types import DF
 
 		account: DF.Link
+		account_name: DF.Data | None
 		account_number: DF.Data | None
 		april: DF.Currency
 		august: DF.Currency

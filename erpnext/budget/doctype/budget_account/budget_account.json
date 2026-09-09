@@ -10,6 +10,7 @@
   "account",
   "account_number",
   "budget_type",
+  "account_name",
   "column_break_4",
   "budget_check",
   "source_of_fund",
@@ -505,11 +506,17 @@
    "fieldname": "project_name",
    "fieldtype": "Data",
    "label": "Project Name"
+  },
+  {
+   "fetch_from": "account.account_name",
+   "fieldname": "account_name",
+   "fieldtype": "Data",
+   "label": "Account Name"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2026-09-08 15:19:21.823470",
+ "modified": "2026-09-09 12:06:02.846733",
  "modified_by": "Administrator",
  "module": "Budget",
  "name": "Budget Account",
