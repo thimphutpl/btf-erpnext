@@ -19,6 +19,8 @@
   "posting_date",
   "posting_time",
   "set_posting_time",
+  "bill_no",
+  "bill_date",
   "due_date",
   "column_break1",
   "is_paid",
@@ -30,10 +32,6 @@
   "apply_tds",
   "tax_withholding_category",
   "amended_from",
-  "supplier_invoice_details",
-  "bill_no",
-  "column_break_15",
-  "bill_date",
   "accounting_dimensions_section",
   "cost_center",
   "dimension_col_break",
@@ -381,13 +379,6 @@
    "label": "Reason For Putting On Hold"
   },
   {
-   "collapsible": 1,
-   "collapsible_depends_on": "bill_no",
-   "fieldname": "supplier_invoice_details",
-   "fieldtype": "Section Break",
-   "label": "Supplier Invoice"
-  },
-  {
    "fieldname": "bill_no",
    "fieldtype": "Data",
    "label": "Supplier Invoice No",
@@ -395,10 +386,6 @@
    "oldfieldtype": "Data",
    "print_hide": 1,
    "search_index": 1
-  },
-  {
-   "fieldname": "column_break_15",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "bill_date",
@@ -1424,12 +1411,10 @@
    "read_only": 1
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "ignore_default_payment_terms_template",
    "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Ignore Default Payment Terms Template",
-   "read_only": 1
+   "label": "Ignore Default Payment Terms Template"
   },
   {
    "collapsible": 1,
@@ -1652,7 +1637,7 @@
  "idx": 204,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-25 11:37:50.188496",
+ "modified": "2026-09-09 11:53:08.259493",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Purchase Invoice",

@@ -586,6 +586,7 @@ cur_frm.fields_dict["items"].grid.get_field("project").get_query = function (doc
 };
 
 frappe.ui.form.on("Purchase Invoice", {
+	
 	setup: function (frm) {
 		frm.custom_make_buttons = {
 			"Purchase Invoice": "Return / Debit Note",
