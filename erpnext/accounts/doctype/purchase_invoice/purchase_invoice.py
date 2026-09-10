@@ -318,10 +318,10 @@ class PurchaseInvoice(BuyingController):
 			self.party_account_currency = frappe.get_cached_value(
 				"Account", self.credit_to, "account_currency"
 			)
-		if not self.due_date:
-			self.due_date = get_due_date(
-				self.posting_date, "Supplier", self.supplier, self.company, self.bill_date
-			)
+		# if not self.due_date:
+		# 	self.due_date = get_due_date(
+		# 		self.posting_date, "Supplier", self.supplier, self.company, self.bill_date
+		# 	)
 
 		tds_category = frappe.db.get_value("Supplier", self.supplier, "tax_withholding_category")
 		if tds_category and not for_validate:
