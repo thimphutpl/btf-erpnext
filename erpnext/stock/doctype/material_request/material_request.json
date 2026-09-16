@@ -21,10 +21,9 @@
   "requested_by",
   "warehouse_section",
   "scan_barcode",
-  "column_break_13",
-  "set_from_warehouse",
   "column_break5",
   "set_warehouse",
+  "set_from_warehouse",
   "items_section",
   "items",
   "section_break_qznn",
@@ -354,10 +353,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "column_break_13",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "branch",
    "fieldtype": "Link",
    "label": "Branch",
@@ -373,8 +368,7 @@
    "fieldname": "requested_by",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Requested By",
-   "read_only": 1
+   "label": "Requested By"
   },
   {
    "fieldname": "section_break_qznn",
@@ -390,7 +384,7 @@
  "idx": 70,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-01 09:35:18.239660",
+ "modified": "2026-09-04 11:23:57.931534",
  "modified_by": "Administrator",
  "module": "Stock",
  "name": "Material Request",
