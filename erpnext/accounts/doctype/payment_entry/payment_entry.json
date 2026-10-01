@@ -26,6 +26,7 @@
   "column_break_11",
   "bank_account",
   "party_bank_account",
+  "bank_account_no",
   "contact_person",
   "contact_email",
   "payment_accounts_section",
@@ -39,6 +40,7 @@
   "paid_to_account_type",
   "paid_to_account_currency",
   "paid_to_account_balance",
+  "account_number",
   "payment_amounts_section",
   "paid_amount",
   "paid_amount_after_tax",
@@ -95,7 +97,6 @@
   "letter_head",
   "print_heading",
   "bank",
-  "bank_account_no",
   "payment_order",
   "in_words",
   "payments_section",
@@ -525,8 +526,9 @@
   {
    "fetch_from": "bank_account.bank_account_no",
    "fieldname": "bank_account_no",
-   "fieldtype": "Read Only",
-   "label": "Bank Account No"
+   "fieldtype": "Link",
+   "label": "Bank Account No",
+   "options": "Bank Account"
   },
   {
    "fieldname": "payment_order",
@@ -834,6 +836,13 @@
    "fieldtype": "Data",
    "label": "Payment Status",
    "read_only": 1
+  },
+  {
+   "fetch_from": "paid_from.bank_ac_no",
+   "fieldname": "account_number",
+   "fieldtype": "Currency",
+   "label": "Account Number",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -847,7 +856,7 @@
    "table_fieldname": "payment_entries"
   }
  ],
- "modified": "2025-04-18 12:40:35.191168",
+ "modified": "2026-10-01 11:05:38.746637",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Payment Entry",
