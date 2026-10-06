@@ -20,6 +20,7 @@
   "get_items_from_open_material_requests",
   "column_break_7",
   "transaction_date",
+  "dispatch_number",
   "schedule_date",
   "column_break1",
   "company",
@@ -1301,13 +1302,21 @@
    "label": "Branch",
    "options": "Branch",
    "reqd": 1
+  },
+  {
+   "fieldname": "dispatch_number",
+   "fieldtype": "Link",
+   "label": "Dispatch Number",
+   "oldfieldname": "transaction_date",
+   "oldfieldtype": "Date",
+   "options": "Dispatch Number"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 105,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-10 11:27:29.610037",
+ "modified": "2026-09-30 15:33:00.909286",
  "modified_by": "Administrator",
  "module": "Buying",
  "name": "Purchase Order",
