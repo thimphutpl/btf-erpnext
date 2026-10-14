@@ -831,7 +831,7 @@ class ForexTranslationRevaluation(Document):
 				if new_exchange and new_exchange[0].get('exchange_rate'):
 					new_exchange_rate = flt(new_exchange[0].exchange_rate)
 				else:
-					new_exchange_rate = 0.0
+					new_exchange_rate = 1.0
 
 				new_balance_in_base_currency = flt(
 					d.balance_in_account_currency
@@ -875,11 +875,11 @@ class ForexTranslationRevaluation(Document):
 						"new_balance_in_account_currency": (
 							d.balance_in_account_currency
 						),
-						"gain_loss": gainloss_btn,
+						"gain_loss": gain_loss,
 					}
 				)
 
-			# Accounts with zero balance in either Account or Base Currency.
+			# Accounts with zero balance in either Account or Base Currency.kkkkk
 			for d in [
 				row
 				for row in account_details
