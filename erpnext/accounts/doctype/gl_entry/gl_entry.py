@@ -43,6 +43,7 @@ class GLEntry(Document):
 		credit: DF.Currency
 		credit_in_account_currency: DF.Currency
 		credit_in_transaction_currency: DF.Currency
+		current_rate: DF.Data | None
 		debit: DF.Currency
 		debit_in_account_currency: DF.Currency
 		debit_in_transaction_currency: DF.Currency
