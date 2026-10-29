@@ -29,11 +29,11 @@ class JournalEntryAccount(Document):
 		debit_in_account_currency: DF.Currency
 		exchange_rate: DF.Float
 		is_advance: DF.Literal["No", "Yes"]
-		name1: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
 		party: DF.DynamicLink | None
+		party_name: DF.Data | None
 		party_type: DF.Link | None
 		party_type_copy: DF.Link | None
 		project: DF.Link | None
@@ -41,7 +41,7 @@ class JournalEntryAccount(Document):
 		reference_detail_no: DF.Data | None
 		reference_due_date: DF.Date | None
 		reference_name: DF.DynamicLink | None
-		reference_type: DF.Literal["", "Sales Invoice", "Purchase Invoice", "Journal Entry", "Sales Order", "Purchase Order", "Expense Claim", "Asset", "Loan", "Payroll Entry", "Employee Advance", "Exchange Rate Revaluation", "Invoice Discounting", "Fees", "Full and Final Statement", "Payment Entry", "Travel Advance", "Travel Claim", "Muster Roll Payment Entry", "Leave Encashment", "Visitor Pass Registry", "Insurance and Registration", "POL Advance", "Fee Closing Entry", "Cash Deposit Entry", "Asset Value Adjustment", "Leave Travel Concession", "Travel Authorization", "Employee Benefits"]
+		reference_type: DF.Literal["", "Sales Invoice", "Purchase Invoice", "Journal Entry", "Sales Order", "Purchase Order", "Expense Claim", "Asset", "Loan", "Payroll Entry", "Employee Advance", "Exchange Rate Revaluation", "Invoice Discounting", "Fees", "Full and Final Statement", "Payment Entry", "Travel Advance", "Travel Claim", "Muster Roll Payment Entry", "Leave Encashment", "Visitor Pass Registry", "Insurance and Registration", "POL Advance", "Fee Closing Entry", "Cash Deposit Entry", "Asset Value Adjustment", "Leave Travel Concession", "Travel Authorization", "Employee Benefits", "Forex Translation Revaluation"]
 		source_of_fund: DF.Link | None
 		tax_account: DF.Link | None
 		tax_amount: DF.Currency

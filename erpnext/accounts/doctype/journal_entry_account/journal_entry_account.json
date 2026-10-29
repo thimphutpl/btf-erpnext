@@ -14,7 +14,7 @@
   "party_type",
   "party_type_copy",
   "party",
-  "name1",
+  "party_name",
   "accounting_dimensions_section",
   "cost_center",
   "dimension_col_break",
@@ -24,11 +24,11 @@
   "account_currency",
   "column_break_10",
   "exchange_rate",
-  "current_rate",
   "sec_break1",
   "debit_in_account_currency",
   "debit",
   "col_break2",
+  "current_rate",
   "credit_in_account_currency",
   "credit",
   "taxes_section",
@@ -199,7 +199,7 @@
    "fieldtype": "Select",
    "label": "Reference Type",
    "no_copy": 1,
-   "options": "\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nFull and Final Statement\nPayment Entry\nTravel Advance\nTravel Claim\nMuster Roll Payment Entry\nLeave Encashment\nVisitor Pass Registry\nInsurance and Registration\nPOL Advance\nFee Closing Entry\nCash Deposit Entry\nAsset Value Adjustment\nLeave Travel Concession\nTravel Authorization\nEmployee Benefits",
+   "options": "\nSales Invoice\nPurchase Invoice\nJournal Entry\nSales Order\nPurchase Order\nExpense Claim\nAsset\nLoan\nPayroll Entry\nEmployee Advance\nExchange Rate Revaluation\nInvoice Discounting\nFees\nFull and Final Statement\nPayment Entry\nTravel Advance\nTravel Claim\nMuster Roll Payment Entry\nLeave Encashment\nVisitor Pass Registry\nInsurance and Registration\nPOL Advance\nFee Closing Entry\nCash Deposit Entry\nAsset Value Adjustment\nLeave Travel Concession\nTravel Authorization\nEmployee Benefits\nForex Translation Revaluation",
    "search_index": 1
   },
   {
@@ -364,16 +364,16 @@
    "label": "Current Rate"
   },
   {
-   "fieldname": "name1",
+   "fieldname": "party_name",
    "fieldtype": "Data",
-   "label": "Name",
+   "label": "Party Name",
    "read_only": 1
   }
  ],
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-08-03 14:47:34.288030",
+ "modified": "2026-10-29 14:59:50.822143",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Journal Entry Account",
